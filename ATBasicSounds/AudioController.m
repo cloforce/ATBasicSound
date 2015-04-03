@@ -114,9 +114,19 @@
     self.backgroundMusicPlayer.delegate = self;  // We need this so we can restart after interruptions
     self.backgroundMusicPlayer.numberOfLoops = -1;	// Negative number means loop forever
     
+    //Working Example
     
-    //NSURL *url = [NSURL URLWithString:@"https://ia802508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3"];
+    NSURL *url = [NSURL URLWithString:@"https://ia802508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3"];
+    self.avAsset = [AVURLAsset URLAssetWithURL:url options:nil];
+    self.playerItem = [AVPlayerItem playerItemWithAsset:_avAsset];
+    self.audioPlayer = [AVPlayer playerWithPlayerItem:_playerItem];
+    //[self.audioPlayer play];
     
+    
+    /*
+    
+    //YOUTUBE MP3 Testing
+     
     //This works but the service is to slow
     //NSURL *url = [NSURL URLWithString:@"http:\/\/w3.youtubeinmp3.com\/download\/grabber\/?mp3=Electro_House_2015_Best_of_Party_Charts_Dance_Mix_140.mp3&id=QuTGjAI6iSc&t=Electro+%26+House+2015+Best+of+Party+Charts+Dance++Mix+%23140&s=10"];
     
@@ -136,16 +146,12 @@
     }
     
     NSURL *newURL = [NSURL URLWithString:finalURL];
-    
-    
-    self.avAsset = [AVURLAsset URLAssetWithURL:newURL options:nil];
-    self.playerItem = [AVPlayerItem playerItemWithAsset:_avAsset];
-    self.audioPlayer = [AVPlayer playerWithPlayerItem:_playerItem];
-    //[self.audioPlayer play];
-    
+
     //Youtube MP3 Conversion Test
     static NSString *baseUrl = @"http://youtubeinmp3.com/fetch/?api=advanced&format=JSON&video=";
     static NSString *videoUrl = @"https://www.youtube.com/watch?v=QuTGjAI6iSc";
+     
+     */
     
     
 }
