@@ -114,46 +114,30 @@
     self.backgroundMusicPlayer.delegate = self;  // We need this so we can restart after interruptions
     self.backgroundMusicPlayer.numberOfLoops = -1;	// Negative number means loop forever
     
-    //Working Example
-    
-    NSURL *url = [NSURL URLWithString:@"https://ia802508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3"];
-    self.avAsset = [AVURLAsset URLAssetWithURL:url options:nil];
-    self.playerItem = [AVPlayerItem playerItemWithAsset:_avAsset];
-    self.audioPlayer = [AVPlayer playerWithPlayerItem:_playerItem];
-    //[self.audioPlayer play];
-    
-    
-    /*
     
     //YOUTUBE MP3 Testing
      
-    //This works but the service is to slow
-    //NSURL *url = [NSURL URLWithString:@"http:\/\/w3.youtubeinmp3.com\/download\/grabber\/?mp3=Electro_House_2015_Best_of_Party_Charts_Dance_Mix_140.mp3&id=QuTGjAI6iSc&t=Electro+%26+House+2015+Best+of+Party+Charts+Dance++Mix+%23140&s=10"];
+    //Youtube Video ID string random number key and GET url
+    NSString *videoID = @"6o5TpKpZsxY";
+    NSString *videoKey = @"2489912";
+    NSString *GETurl =[NSString stringWithFormat:@"http://www.video2mp3.at/settings.php?set=check&format=mp3&id=%@&video=%@",videoID,videoKey];
     
-    //The QuTGjAI6iSc is the video ID
-    NSString *string = [NSString stringWithContentsOfURL:[NSURL URLWithString:@"http://api.video2mp3.cc/api/QuTGjAI6iSc/"] encoding:NSUTF8StringEncoding error:nil];
+    //GET request to retrieve the response key to build the URL
+    NSString *responeData = [NSString stringWithContentsOfURL:[NSURL URLWithString:GETurl] encoding:NSUTF8StringEncoding error:nil];
+    NSArray *responseDataList = [responeData componentsSeparatedByString:@"|"];
     
-    NSData *testData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://api.video2mp3.cc/api/QuTGjAI6iSc/"]];
-    TFHpple *scraper = [TFHpple hppleWithHTMLData:testData];
-    NSString *tutorialsXpathQueryString = @"//*[@id='dlsrc']";
-    NSArray *tutorialsNodes = [scraper searchWithXPathQuery:tutorialsXpathQueryString];
+    //Build download URL
+    NSString *mp3URL = [NSString stringWithFormat:@"http://s%@.video2mp3.at/dl.php?id=%@",[responseDataList objectAtIndex:1],[responseDataList objectAtIndex:2]];
     
-    NSString *finalURL;
-    for (TFHppleElement *element in tutorialsNodes)
-    {
-        NSString *scraperURL = [NSString stringWithString:[element objectForKey:@"href"]];
-        finalURL = [NSString stringWithFormat:@"%@",scraperURL];
-    }
+    //Working Example
     
-    NSURL *newURL = [NSURL URLWithString:finalURL];
-
-    //Youtube MP3 Conversion Test
-    static NSString *baseUrl = @"http://youtubeinmp3.com/fetch/?api=advanced&format=JSON&video=";
-    static NSString *videoUrl = @"https://www.youtube.com/watch?v=QuTGjAI6iSc";
+    NSURL *url = [NSURL URLWithString:mp3URL];
+    self.avAsset = [AVURLAsset URLAssetWithURL:url options:nil];
+    self.playerItem = [AVPlayerItem playerItemWithAsset:_avAsset];
+    self.audioPlayer = [AVPlayer playerWithPlayerItem:_playerItem];
+    [self.audioPlayer play];
      
-     */
-    
-    
+
 }
 
 - (void)configureSystemSound {
