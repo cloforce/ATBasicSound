@@ -5,10 +5,10 @@
 //  Created by Audrey M Tam on 22/03/2014.
 //  Copyright (c) 2014 Ray Wenderlich. All rights reserved.
 //
-#define ARC4RANDOM_MAX      0x100000000
+
 
 #import "AudioController.h"
-#import "TFHpple.h"
+#import "Network.h"
 @import AVFoundation;
 
 @interface AudioController () <AVAudioPlayerDelegate>
@@ -115,30 +115,14 @@
     self.backgroundMusicPlayer.delegate = self;  // We need this so we can restart after interruptions
     self.backgroundMusicPlayer.numberOfLoops = -1;	// Negative number means loop forever
     
+    Network *object  = [[Network alloc]initWithData:@"test"];
+    [object main];
     
-    //YOUTUBE MP3 Testing
-     
-    //Youtube Video ID string random number key and GET url
-    NSString *videoID = @"6o5TpKpZsxY";
-    double val = ((double)arc4random() / ARC4RANDOM_MAX);
-    double randomVal = floor(val*3500000);
-    NSString *videoKey = [NSString stringWithFormat:@"%f",randomVal];
     
-    NSString *GETurl =[NSString stringWithFormat:@"http://www.video2mp3.at/settings.php?set=check&format=mp3&id=%@&video=%@",videoID,videoKey];
     
-    //GET request to retrieve the response key to build the URL
-    NSString *responeData = [NSString stringWithContentsOfURL:[NSURL URLWithString:GETurl] encoding:NSUTF8StringEncoding error:nil];
-    NSArray *responseDataList = [responeData componentsSeparatedByString:@"|"];
-    
-    //Build download URL
-    NSString *mp3URL = [NSString stringWithFormat:@"http://s%@.video2mp3.at/dl.php?id=%@",[responseDataList objectAtIndex:1],[responseDataList objectAtIndex:2]];
-    
-    //Write to filepath
-    //This works, need to move off the main thread.
-    NSData *mp3File = [NSData dataWithContentsOfURL:[NSURL URLWithString:mp3URL]];
+    //filePath is where we saved the file, use NSNotifaction to pass it back here.
     NSString *cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *filePath = [cacheDirectory stringByAppendingPathComponent:@"sample.mp3"];
-    [mp3File writeToFile:filePath atomically:YES];
     
     self.playerItem = [AVPlayerItem playerItemWithURL:[NSURL fileURLWithPath:filePath]];
     self.audioPlayer = [AVPlayer playerWithPlayerItem:_playerItem];
