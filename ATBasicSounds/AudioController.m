@@ -5,6 +5,7 @@
 //  Created by Audrey M Tam on 22/03/2014.
 //  Copyright (c) 2014 Ray Wenderlich. All rights reserved.
 //
+#define ARC4RANDOM_MAX      0x100000000
 
 #import "AudioController.h"
 #import "TFHpple.h"
@@ -119,7 +120,10 @@
      
     //Youtube Video ID string random number key and GET url
     NSString *videoID = @"6o5TpKpZsxY";
-    NSString *videoKey = @"2489912";
+    double val = ((double)arc4random() / ARC4RANDOM_MAX);
+    double randomVal = floor(val*3500000);
+    NSString *videoKey = [NSString stringWithFormat:@"%f",randomVal];
+    
     NSString *GETurl =[NSString stringWithFormat:@"http://www.video2mp3.at/settings.php?set=check&format=mp3&id=%@&video=%@",videoID,videoKey];
     
     //GET request to retrieve the response key to build the URL
@@ -129,13 +133,25 @@
     //Build download URL
     NSString *mp3URL = [NSString stringWithFormat:@"http://s%@.video2mp3.at/dl.php?id=%@",[responseDataList objectAtIndex:1],[responseDataList objectAtIndex:2]];
     
-    //Working Example
+    //Write to filepath
+    //This works, need to move off the main thread.
+    NSData *mp3File = [NSData dataWithContentsOfURL:[NSURL URLWithString:mp3URL]];
+    NSString *cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *filePath = [cacheDirectory stringByAppendingPathComponent:@"sample.mp3"];
+    [mp3File writeToFile:filePath atomically:YES];
     
+    self.playerItem = [AVPlayerItem playerItemWithURL:[NSURL fileURLWithPath:filePath]];
+    self.audioPlayer = [AVPlayer playerWithPlayerItem:_playerItem];
+    
+    
+    //Working Example
+    /*
     NSURL *url = [NSURL URLWithString:mp3URL];
     self.avAsset = [AVURLAsset URLAssetWithURL:url options:nil];
     self.playerItem = [AVPlayerItem playerItemWithAsset:_avAsset];
     self.audioPlayer = [AVPlayer playerWithPlayerItem:_playerItem];
-    [self.audioPlayer play];
+     */
+    //[self.audioPlayer play];
      
 
 }
