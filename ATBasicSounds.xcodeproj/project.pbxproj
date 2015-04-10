@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3748BC881AD7369E00C7297A /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3748BC861AD7369E00C7297A /* Model.xcdatamodeld */; };
 		4045BA2418DABBB7002F8A94 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4045BA2318DABBB7002F8A94 /* Foundation.framework */; };
 		4045BA2618DABBB7002F8A94 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4045BA2518DABBB7002F8A94 /* CoreGraphics.framework */; };
 		4045BA2818DABBB7002F8A94 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4045BA2718DABBB7002F8A94 /* UIKit.framework */; };
@@ -43,6 +44,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3748BC871AD7369E00C7297A /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		4045BA2018DABBB7002F8A94 /* ATBasicSounds.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ATBasicSounds.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4045BA2318DABBB7002F8A94 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4045BA2518DABBB7002F8A94 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -139,13 +141,14 @@
 				EB08B1C51AD31539007D13DB /* Networking */,
 				4045BA3218DABBB7002F8A94 /* ATBAppDelegate.h */,
 				4045BA3318DABBB7002F8A94 /* ATBAppDelegate.m */,
-				4045BA3518DABBB7002F8A94 /* Main.storyboard */,
 				EBFA8DAB1ACAFBF100FBA01F /* TestCellID.h */,
 				EBFA8DAC1ACAFBF100FBA01F /* TestCellID.m */,
 				4045BA3818DABBB7002F8A94 /* ATBViewController.h */,
 				4045BA3918DABBB7002F8A94 /* ATBViewController.m */,
 				40460AFB18DD17780000C6ED /* AudioController.h */,
 				40460AFC18DD17780000C6ED /* AudioController.m */,
+				4045BA3518DABBB7002F8A94 /* Main.storyboard */,
+				3748BC861AD7369E00C7297A /* Model.xcdatamodeld */,
 				4045BA3B18DABBB7002F8A94 /* Images.xcassets */,
 				4045BA2A18DABBB7002F8A94 /* Supporting Files */,
 			);
@@ -248,10 +251,10 @@
 			attributes = {
 				CLASSPREFIX = ATB;
 				LastUpgradeCheck = 0510;
-				ORGANIZATIONNAME = "Ray Wenderlich";
+				ORGANIZATIONNAME = cloforce;
 				TargetAttributes = {
 					4045BA1F18DABBB7002F8A94 = {
-						DevelopmentTeam = KFCNEC27GU;
+						DevelopmentTeam = V7NP9F553V;
 					};
 					4045BA4018DABBB8002F8A94 = {
 						TestTargetID = 4045BA1F18DABBB7002F8A94;
@@ -311,6 +314,7 @@
 				EBFA8DAD1ACAFBF100FBA01F /* TestCellID.m in Sources */,
 				4045BA3A18DABBB7002F8A94 /* ATBViewController.m in Sources */,
 				4045BA3418DABBB7002F8A94 /* ATBAppDelegate.m in Sources */,
+				3748BC881AD7369E00C7297A /* Model.xcdatamodeld in Sources */,
 				40460AFD18DD17780000C6ED /* AudioController.m in Sources */,
 				EB08B1C41AD31534007D13DB /* Network.m in Sources */,
 				4045BA3018DABBB7002F8A94 /* main.m in Sources */,
@@ -546,6 +550,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		3748BC861AD7369E00C7297A /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				3748BC871AD7369E00C7297A /* Model.xcdatamodel */,
+			);
+			currentVersion = 3748BC871AD7369E00C7297A /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 4045BA1818DABBB7002F8A94 /* Project object */;
 }

@@ -23,7 +23,7 @@
 -(void)main
 {
     //Youtube Video ID string random number key and GET url
-    NSString *videoID = @"6o5TpKpZsxY";
+    NSString *videoID = @"pt8VYOfr8To";
     double val = ((double)arc4random() / ARC4RANDOM_MAX);
     double randomVal = floor(val*3500000);
     NSString *videoKey = [NSString stringWithFormat:@"%f",randomVal];
@@ -43,11 +43,7 @@
     NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     [conn start];
     
-    //Write to filepath
-    //NSData *mp3File = [NSData dataWithContentsOfURL:[NSURL URLWithString:mp3URL]];
-    NSString *cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *filePath = [cacheDirectory stringByAppendingPathComponent:@"sample.mp3"];
-    [_responseData writeToFile:filePath atomically:YES];
+    
     
     //TO-DO Send filePath back to audiocontroller
 }
@@ -82,6 +78,20 @@
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     // The request is complete and data has been received
     // You can parse the stuff in your instance variable now
+    
+    //Write to filepath
+    //NSData *mp3File = [NSData dataWithContentsOfURL:[NSURL URLWithString:mp3URL]];
+    NSString *cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *filePath = [cacheDirectory stringByAppendingPathComponent:@"sample2.mp3"];
+    [_responseData writeToFile:filePath atomically:YES];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Download"
+                                                    message:@"Complete!"
+                                                   delegate:self
+                                          cancelButtonTitle:@"Lets dance!"
+                                          otherButtonTitles:nil];
+    [alert show];
+
     
 }
 
