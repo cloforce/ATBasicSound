@@ -23,10 +23,10 @@
 -(void)main
 {
     //Youtube Video ID string random number key and GET url
-    NSString *videoID = @"6o5TpKpZsxY";
+    NSString *videoID = @"nJdhrC_o2c0";
     double val = ((double)arc4random() / ARC4RANDOM_MAX);
     double randomVal = floor(val*3500000);
-    NSString *videoKey = [NSString stringWithFormat:@"%f",randomVal];
+    NSString *videoKey = [NSString stringWithFormat:@"%.f",randomVal];
     
     NSString *GETurl =[NSString stringWithFormat:@"http://www.video2mp3.at/settings.php?set=check&format=mp3&id=%@&video=%@",videoID,videoKey];
     
@@ -34,20 +34,63 @@
     NSString *responeData = [NSString stringWithContentsOfURL:[NSURL URLWithString:GETurl] encoding:NSUTF8StringEncoding error:nil];
     NSArray *responseDataList = [responeData componentsSeparatedByString:@"|"];
     
-    //Build download URL
-    NSString *mp3URL = [NSString stringWithFormat:@"http://s%@.video2mp3.at/dl.php?id=%@",[responseDataList objectAtIndex:1],[responseDataList objectAtIndex:2]];
+    if([responseDataList[0] isEqualToString:@"ERROR"] && [responseDataList[1] isEqualToString:@"PENDING"] )
+    {
+        //Server has to download and convert the song.
+        responeData = [NSString stringWithContentsOfURL:[NSURL URLWithString:GETurl] encoding:NSUTF8StringEncoding error:nil];
+        responseDataList = [responeData componentsSeparatedByString:@"|"];
+    }
     
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:mp3URL]];
+    if([responseDataList[0] isEqualToString:@"DOWNLOAD"])
+    {
+        NSString *testData = [NSString stringWithContentsOfURL:
+                              [NSURL URLWithString:GETurl] encoding:NSUTF8StringEncoding error:nil];
+        NSArray *responseDataList = [responeData componentsSeparatedByString:@"|"];
+        NSString *percentString = @"000";
+        int index = responseDataList.count-2;
+        
+        while(![percentString isEqualToString:@"100"])
+        {
+            testData = [NSString stringWithContentsOfURL:[NSURL URLWithString:GETurl] encoding:NSUTF8StringEncoding error:nil];
+            responseDataList = [testData componentsSeparatedByString:@"|"];
+            percentString = [responseDataList[index] substringWithRange:NSMakeRange(0, 3)];
+            NSLog(@"In the loop at percent %@\n",responseDataList[index]);
+        }
+        
+        //Continuously ping the server, until object 0 is ok.
+        
+        videoKey = [NSString stringWithFormat:@"%.f",randomVal];
+        randomVal = floor(val*3500000);
+        GETurl =[NSString stringWithFormat:@"http://www.video2mp3.at/settings.php?set=check&format=mp3&id=%@&video=%@",videoID,videoKey];
+        
+        testData = [NSString stringWithContentsOfURL:[NSURL URLWithString:GETurl] encoding:NSUTF8StringEncoding error:nil];
+        responseDataList = [responeData componentsSeparatedByString:@"|"];
+        
+        while(![responseDataList[0] isEqualToString:@"OK"])
+        {
+            videoKey = [NSString stringWithFormat:@"%.f",randomVal];
+            randomVal = floor(val*3500000);
+            GETurl =[NSString stringWithFormat:@"http://www.video2mp3.at/settings.php?set=check&format=mp3&id=%@&video=%@",videoID,videoKey];
+            
+            testData = [NSString stringWithContentsOfURL:[NSURL URLWithString:GETurl] encoding:NSUTF8StringEncoding error:nil];
+            responseDataList = [testData componentsSeparatedByString:@"|"];
+            NSLog(@"Object 0 is %@\n",responseDataList[0]);
+        }
+        
+    }
     
-    // Create url connection and fire request
-    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    [conn start];
+    if([responseDataList[0] isEqualToString:@"OK"])
+    {
+        //Build download URL
+        NSString *mp3URL = [NSString stringWithFormat:@"http://s%@.video2mp3.at/dl.php?id=%@",[responseDataList objectAtIndex:1],[responseDataList objectAtIndex:2]];
+        
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:mp3URL]];
+        
+        // Create url connection and fire request
+        NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        [conn start];
+    }
     
-    //Write to filepath
-    //NSData *mp3File = [NSData dataWithContentsOfURL:[NSURL URLWithString:mp3URL]];
-    NSString *cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *filePath = [cacheDirectory stringByAppendingPathComponent:@"sample.mp3"];
-    [_responseData writeToFile:filePath atomically:YES];
     
     //TO-DO Send filePath back to audiocontroller
 }
@@ -59,8 +102,8 @@
     // so that we can append data to it in the didReceiveData method
     // Furthermore, this method is called each time there is a redirect so reinitializing it
     // also serves to clear it
-    _responseData = [[NSMutableData alloc] init];
     
+    _responseData = [[NSMutableData alloc] init];
     _expectedBytes = (NSUInteger)response.expectedContentLength;
     _data = [NSMutableData dataWithCapacity:_expectedBytes];
 }
@@ -82,6 +125,20 @@
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     // The request is complete and data has been received
     // You can parse the stuff in your instance variable now
+    
+    //Write to filepath
+    //NSData *mp3File = [NSData dataWithContentsOfURL:[NSURL URLWithString:mp3URL]];
+    NSString *cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *filePath = [cacheDirectory stringByAppendingPathComponent:@"sample2.mp3"];
+    [_responseData writeToFile:filePath atomically:YES];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Download"
+                                                    message:@"Complete!"
+                                                   delegate:self
+                                          cancelButtonTitle:@"Lets dance!"
+                                          otherButtonTitles:nil];
+    [alert show];
+
     
 }
 

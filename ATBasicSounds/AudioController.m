@@ -67,6 +67,22 @@
     [self.audioPlayer play];
 }
 
+-(void)downloadTapped
+{
+    NSString *cacheDirectory = [NSSearchPathForDirectoriesInDomains
+                                (NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    
+    NSString *filePath = [cacheDirectory stringByAppendingPathComponent:@"sample2.mp3"];
+    
+    
+    
+    self.playerItem = [AVPlayerItem playerItemWithURL:[NSURL fileURLWithPath:filePath]];
+    self.audioPlayer = [AVPlayer playerWithPlayerItem:_playerItem];
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    [[AVAudioSession sharedInstance] setActive: YES error: nil];
+}
+
 - (void)pauseTapped
 {
     [self.audioPlayer pause];
@@ -117,26 +133,6 @@
     
     Network *object  = [[Network alloc]initWithData:@"test"];
     [object main];
-    
-    
-    
-    //filePath is where we saved the file, use NSNotifaction to pass it back here.
-    NSString *cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *filePath = [cacheDirectory stringByAppendingPathComponent:@"sample.mp3"];
-    
-    self.playerItem = [AVPlayerItem playerItemWithURL:[NSURL fileURLWithPath:filePath]];
-    self.audioPlayer = [AVPlayer playerWithPlayerItem:_playerItem];
-    
-    
-    //Working Example
-    /*
-    NSURL *url = [NSURL URLWithString:mp3URL];
-    self.avAsset = [AVURLAsset URLAssetWithURL:url options:nil];
-    self.playerItem = [AVPlayerItem playerItemWithAsset:_avAsset];
-    self.audioPlayer = [AVPlayer playerWithPlayerItem:_playerItem];
-     */
-    //[self.audioPlayer play];
-     
 
 }
 

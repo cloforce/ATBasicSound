@@ -30,7 +30,7 @@
     
     sampleData = [[NSMutableArray alloc] initWithObjects:[NSString stringWithFormat:@"Play"],
                   [NSString stringWithFormat:@"Pause"],[NSString stringWithFormat:@"Double Rate"],
-                  [NSString stringWithFormat:@"Single Rate"], nil];
+                  [NSString stringWithFormat:@"Single Rate"],[NSString stringWithFormat:@"Download Song"], nil];
 
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -50,35 +50,12 @@
 
 #pragma mark - IBAction
 
-- (IBAction)spaceshipTapped:(id)sender {
-    //The call below uses AudioServicesPlaySystemSound to play
-    //the short pew-pew sound.
-	[self.audioController playSystemSound];
-	[self fireBullet];
-}
 
 - (void)notifTest:(NSNotification *)notif
 {
     NSLog(@"notifTest fired with data %@",[[notif userInfo]valueForKey:@"key"]);
 }
 
-
-- (void)fireBullet {
-    // In IB, the button to top layout guide constraint is set to 229, so
-    // the bullets appear in the correct place, on both 3.5" and 4" screens
-	UIImageView *bullets = [[UIImageView alloc] initWithFrame:CGRectMake(84, 256, 147, 29)];
-	bullets.image = [UIImage imageNamed:@"bullets.png"];
-	[self.view addSubview:bullets];
-	[self.view sendSubviewToBack:bullets];
-	[UIView beginAnimations:@"shoot" context:(__bridge void *)(bullets)];
-	CGRect frame = bullets.frame;
-	frame.origin.y = -29;
-	bullets.frame = frame;
-	[UIView setAnimationDuration:0.5];
-	[UIView setAnimationDelegate:self];
-	[UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
-	[UIView commitAnimations];
-}
 
 - (void) animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
 	UIImageView *bullets = (__bridge UIImageView *)context;
@@ -115,6 +92,9 @@
     
     if(indexPath.row == 3)
         [self.audioController singleTapped];
+    
+    if(indexPath.row == 4)
+        [self.audioController downloadTapped];
 }
 
 @end

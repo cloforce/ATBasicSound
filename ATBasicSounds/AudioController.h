@@ -17,5 +17,6 @@
 - (void)pauseTapped;
 - (void)doubleTapped;
 - (void)singleTapped;
+- (void)downloadTapped;
 
 @end
