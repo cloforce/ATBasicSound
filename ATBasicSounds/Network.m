@@ -3,10 +3,10 @@
 //  ATBasicSounds
 //
 //  Created by Gregory Young on 4/6/15.
-//  Copyright (c) 2015 Ray Wenderlich. All rights reserved.
 //
 #define ARC4RANDOM_MAX      0x100000000
 #import "Network.h"
+#import "AFNetworking.h"
 
 @implementation Network
 
@@ -20,15 +20,29 @@
     return self;
 }
 
+-(void)postGetRequest:(NSString*)url{
+    
+    //AFNetowrking
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"JSON: %@", responseObject);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+        [self postGetRequest:url];
+    }];
+}
+
 -(void)main
 {
     //Youtube Video ID string random number key and GET url
-    NSString *videoID = @"nJdhrC_o2c0";
+    NSString *videoID = @"BU769XX_dIQ";
     double val = ((double)arc4random() / ARC4RANDOM_MAX);
     double randomVal = floor(val*3500000);
     NSString *videoKey = [NSString stringWithFormat:@"%.f",randomVal];
     
-    NSString *GETurl =[NSString stringWithFormat:@"http://www.video2mp3.at/settings.php?set=check&format=mp3&id=%@&video=%@",videoID,videoKey];
+    NSString *GETurl =[NSString stringWithFormat:@"http://www.video2mp3.at/settings.php?set=check&format=mp3&id=%@&key=%@",videoID,videoKey];
+    
+    [self postGetRequest:GETurl];
     
     //GET request to retrieve the response key to build the URL
     NSString *responeData = [NSString stringWithContentsOfURL:[NSURL URLWithString:GETurl] encoding:NSUTF8StringEncoding error:nil];
@@ -82,7 +96,7 @@
     if([responseDataList[0] isEqualToString:@"OK"])
     {
         //Build download URL
-        NSString *mp3URL = [NSString stringWithFormat:@"http://s%@.video2mp3.at/dl.php?id=%@",[responseDataList objectAtIndex:1],[responseDataList objectAtIndex:2]];
+        NSString *mp3URL = [NSString stringWithFormat:@"http://dl%@.downloader.space/dl.php?id=%@",[responseDataList objectAtIndex:1],[responseDataList objectAtIndex:2]];
         
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:mp3URL]];
         
@@ -93,6 +107,7 @@
     
     
     //TO-DO Send filePath back to audiocontroller
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"downloadComplete" object:self userInfo:@{@"key" : @"value"}];
 }
 
 #pragma mark NSURLConnection Delegate Methods
@@ -138,8 +153,6 @@
                                           cancelButtonTitle:@"Lets dance!"
                                           otherButtonTitles:nil];
     [alert show];
-
-    
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
